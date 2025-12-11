@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CrateJuice™ Press</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="cj-body">
+  <div class="cj-frame">
+    <header class="cj-header">
+      <h1>CrateJuice™ Press</h1>
+      <p class="cj-tagline">Vintage Sonic Postcards for Special Humans</p>
+    </header>
+
+    <main class="cj-main">
+      <section class="cj-form">
+        <label class="cj-label">
+          Message:
+          <textarea id="messageText" rows="4"></textarea>
+        </label>
+
+        <label class="cj-label">
+          QR Link:
+          <input id="qrData" type="text" placeholder="https://your.link" />
+        </label>
+
+        <label class="cj-label">
+          Signature:
+          <input id="signatureText" type="text" placeholder="Love, Juice" />
+        </label>
+
+        <button id="generateBtn" class="cj-btn">Generate Postcard</button>
+        <button id="downloadBtn" class="cj-btn cj-btn-secondary" disabled>Download</button>
+      </section>
+
+      <section class="cj-preview">
+        <canvas id="postcardCanvas" width="1200" height="800"></canvas>
+      </section>
+    </main>
+
+    <footer class="cj-footer">
+      CrateJuice™ 2025 · PLUR
+    </footer>
+  </div>
+
+  <script type="module" src="js/postcard.js"></script>
+</body>
+</html>
