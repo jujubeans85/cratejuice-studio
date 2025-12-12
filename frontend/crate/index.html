@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CrateJuice™ Crate Stacker</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="cj-body">
+  <div class="cj-frame">
+    <header class="cj-header">
+      <h1>Crate Stacker</h1>
+      <p class="cj-tagline">Turn raw tracklists into living crates.</p>
+    </header>
+
+    <main class="cj-main">
+      <section class="cj-form">
+        <label class="cj-label">
+          Crate name
+          <input id="crateName" type="text" placeholder="High Energy – Vol 1" />
+        </label>
+
+        <label class="cj-label">
+          Playlist URL (optional)
+          <input
+            id="playlistUrl"
+            type="text"
+            value="https://open.spotify.com/playlist/2kiyQzCSwzEoQ27vM568k9?si=T65gfsrjSZSuks99iko6HQ&pi=0qJcr6b_Rpa_d"
+          />
+        </label>
+
+        <label class="cj-label">
+          Tracklist (one per line: Artist - Title)
+          <textarea
+            id="rawTracks"
+            rows="10"
+            placeholder="Artist - Track
+Artist - Another Track"
+          ></textarea>
+        </label>
+
+        <button id="crateBtn" class="cj-btn">Generate Crate</button>
+        <button id="downloadCrateBtn" class="cj-btn cj-btn-secondary" disabled>
+          Download JSON
+        </button>
+      </section>
+
+      <section class="cj-preview">
+        <pre id="crateSummary" class="cj-hint">
+Paste a tracklist and hit "Generate Crate" to see it structured here.</pre>
+      </section>
+    </main>
+
+    <footer class="cj-footer">
+      CrateJuice™ 2025 · PLUR
+    </footer>
+  </div>
+
+  <script type="module" src="../js/crate.js"></script>
+</body>
+</html>
