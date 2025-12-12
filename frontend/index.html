@@ -2,40 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CrateJuice™ Press</title>
+  <title>CrateJuice™ Studio</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body class="cj-body">
   <div class="cj-frame">
     <header class="cj-header">
-      <h1>CrateJuice™ Press</h1>
-      <p class="cj-tagline">Vintage Sonic Postcards for Special Humans</p>
+      <h1>CrateJuice™ Studio</h1>
+      <p class="cj-tagline">Life is a playable map.</p>
     </header>
 
     <main class="cj-main">
       <section class="cj-form">
-        <label class="cj-label">
-          Message:
-          <textarea id="messageText" rows="4"></textarea>
-        </label>
+        <h2>Machines</h2>
 
-        <label class="cj-label">
-          QR Link:
-          <input id="qrData" type="text" placeholder="https://your.link" />
-        </label>
+        <a class="cj-btn" href="/press/">
+          Press · Sonic Postcards
+        </a>
 
-        <label class="cj-label">
-          Signature:
-          <input id="signatureText" type="text" placeholder="Love, Juice" />
-        </label>
+        <a class="cj-btn cj-btn-secondary" href="/crate/">
+          Crate Stacker · Tracklists → Crates
+        </a>
 
-        <button id="generateBtn" class="cj-btn">Generate Postcard</button>
-        <button id="downloadBtn" class="cj-btn cj-btn-secondary" disabled>Download</button>
+        <p class="cj-hint">
+          More machines coming soon: Ripper, Postcards, Mum Apps, Advocacy Engine...
+        </p>
       </section>
 
       <section class="cj-preview">
-        <canvas id="postcardCanvas" width="1200" height="800"></canvas>
+        <p class="cj-hint">
+          Welcome to Day 0 of the Cathedral. This is your dashboard.
+          Drop in, pick a machine, and let the chaos get organised.
+        </p>
       </section>
     </main>
 
@@ -43,7 +41,5 @@
       CrateJuice™ 2025 · PLUR
     </footer>
   </div>
-
-  <script type="module" src="js/postcard.js"></script>
 </body>
 </html>
