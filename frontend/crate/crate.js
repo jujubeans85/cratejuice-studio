@@ -1,4 +1,45 @@
 {
+const likeSeed = document.getElementById("likeSeed");
+const similarityStrict = document.getElementById("similarityStrict");
+
+const wContinuous = document.getElementById("wContinuous");
+const wRemixEthics = document.getElementById("wRemixEthics");
+const wDynamics = document.getElementById("wDynamics");
+const wOrchestration = document.getElementById("wOrchestration");
+const wSpeech = document.getElementById("wSpeech");
+const wTruth = document.getElementById("wTruth");
+
+const downloadManifestBtn = document.getElementById("downloadManifestBtn");
+
+function buildManifest() {
+  return {
+    crate_name: nameInput.value || "Untitled Crate",
+    like_seed: likeSeed?.value || null,
+    similarity_strictness: Number(similarityStrict?.value ?? 60),
+    rule_weights: {
+      continuous_build: Number(wContinuous?.value ?? 85),
+      remix_ethics: Number(wRemixEthics?.value ?? 80),
+      dynamics: Number(wDynamics?.value ?? 75),
+      digital_orchestration: Number(wOrchestration?.value ?? 70),
+      speech_over_singing: Number(wSpeech?.value ?? 65),
+      truth_over_shine: Number(wTruth?.value ?? 90),
+    },
+    notes: "CrateJuice Studio – Music 11 Manifest (v1)"
+  };
+}
+
+function downloadManifest() {
+  const manifest = buildManifest();
+  const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${manifest.crate_name}-manifest.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+  
+downloadManifestBtn?.addEventListener("click", downloadManifest);
   "crate_name": "Peace Hop v1",
   "vibe": "Golden era hip-hop / head nod / soul-dusted boom bap",
   "playlist_source": "Screenshot import (Spotify)",
@@ -31,3 +72,5 @@
   "created_at": "2025-12-12",
   "sig": "CrateJuice™ 2025 · PLUR"
 }
+data.manifest = buildManifest();
+lastCrate = data;
