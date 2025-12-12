@@ -2,42 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CrateJuice™ Press</title>
+  <title>CrateJuice™ Crate Stacker</title>
   <link rel="stylesheet" href="../css/style.css" />
-  <script type="module" src="../js/postcard.js"></script>
 </head>
+
 <body class="cj-body">
   <div class="cj-frame">
     <header class="cj-header">
-      <h1>CrateJuice™ Press</h1>
-      <p class="cj-tagline">Vintage Sonic Postcards for Special Humans</p>
+      <h1>Crate Stacker</h1>
+      <p class="cj-tagline">Turn raw tracklists into living crates.</p>
     </header>
 
     <main class="cj-main">
       <section class="cj-form">
         <label class="cj-label">
-          Message:
-          <textarea id="messageText" rows="4"></textarea>
+          Crate name
+          <input id="crateName" type="text" placeholder="High Energy – Vol 1" />
         </label>
 
         <label class="cj-label">
-          QR Link:
-          <input id="qrData" type="text" placeholder="https://your.link" />
+          Playlist URL (optional)
+          <input
+            id="playlistUrl"
+            type="text"
+            value="https://open.spotify.com/playlist/2kiyQzCSwzEoQ27vM568k9?si=T65gfsrjSZSuks99iko6HQ&pi=0qJcr6b_Rpa_d"
+          />
         </label>
 
         <label class="cj-label">
-          Signature:
-          <input id="signatureText" type="text" placeholder="Love, Juice" />
+          “Like…” seed (optional)
+          <input id="likeSeed" type="text" placeholder="Best of Britney similarities (but darker / smarter)" />
         </label>
 
-        <button id="generateBtn" class="cj-btn">Generate Postcard</button>
-        <button id="downloadBtn" class="cj-btn cj-btn-secondary" disabled>
-          Download
+        <label class="cj-label">
+          Similarity strictness
+          <input id="similarityStrict" type="range" min="0" max="100" value="60" />
+          <div class="cj-hint">0 = wide net · 100 = must match hard</div>
+        </label>
+
+        <div class="cj-hint"><b>Rule dials</b> (0–100)</div>
+
+        <label class="cj-label">
+          Continuous build
+          <input id="wContinuous" type="range" min="0" max="100" value="85" />
+        </label>
+
+        <label class="cj-label">
+          Remix ethics (nods, not cosplay)
+          <input id="wRemixEthics" type="range" min="0" max="100" value="80" />
+        </label>
+
+        <label class="cj-label">
+          Dynamics (no brickwall)
+          <input id="wDynamics" type="range" min="0" max="100" value="75" />
+        </label>
+
+        <label class="cj-label">
+          Digital orchestration
+          <input id="wOrchestration" type="range" min="0" max="100" value="70" />
+        </label>
+
+        <label class="cj-label">
+          Speech > singing
+          <input id="wSpeech" type="range" min="0" max="100" value="65" />
+        </label>
+
+        <label class="cj-label">
+          Truth over shine
+          <input id="wTruth" type="range" min="0" max="100" value="90" />
+        </label>
+
+        <label class="cj-label">
+          Tracklist (one per line: Artist - Title)
+          <textarea
+            id="rawTracks"
+            rows="14"
+            placeholder="Ugly Duckling - A Little Samba&#10;Jurassic 5 - Concrete Schoolyard"
+          ></textarea>
+        </label>
+
+        <button id="crateBtn" class="cj-btn">Generate Crate</button>
+
+        <button id="downloadCrateBtn" class="cj-btn cj-btn-secondary" disabled>
+          Download Crate JSON
         </button>
+
+        <button id="downloadManifestBtn" class="cj-btn cj-btn-secondary">
+          Download Manifest JSON
+        </button>
+
+        <button id="makeCandidatesBtn" class="cj-btn">
+          Make 10 candidates (seed)
+        </button>
+
+        <pre id="candidatesOut" class="cj-hint"></pre>
       </section>
 
       <section class="cj-preview">
-        <canvas id="postcardCanvas" width="1200" height="800"></canvas>
+        <pre id="crateSummary" class="cj-hint">
+Paste a tracklist and hit "Generate Crate" to see it structured here.</pre>
       </section>
     </main>
 
@@ -45,5 +108,7 @@
       CrateJuice™ 2025 · PLUR
     </footer>
   </div>
+
+  <script type="module" src="../js/crate.js"></script>
 </body>
 </html>
