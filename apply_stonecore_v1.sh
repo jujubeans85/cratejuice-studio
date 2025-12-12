@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+ HEAD
 set -euo pipefail
 
 # CrateJuice Stone Core v1 — write core files
@@ -13,10 +14,22 @@ set -euo pipefail
 mkdir -p frontend/js frontend/press frontend/crate
 
 cat > netlify.toml <<'TOML'
+=======
+set -e
+
+echo "🗿 Applying Day 14 Stone Core v1..."
+
+# --- Ensure folders ---
+mkdir -p frontend/js frontend/press frontend/crate frontend/css
+
+# --- netlify.toml ---
+cat <<'TOML' > netlify.toml
+>>>>>>> 590ec85 (v1 cemented)
 [build]
   publish = "frontend"
 TOML
 
+ HEAD
 cat > frontend/_redirects <<'TXT'
 /*    /index.html   200
 TXT
@@ -27,19 +40,40 @@ export const CJ_VERSION = "v1.0.0-stonecore";
 JS
 
 cat > frontend/index.html <<'HTML'
+=======
+# --- _redirects ---
+cat <<'REDIR' > frontend/_redirects
+/*    /index.html   200
+REDIR
+
+# --- config.js ---
+cat <<'CFG' > frontend/js/config.js
+export const API_BASE = "https://cratejuice-press-backend.onrender.com";
+export const CJ_VERSION = "v1.0.0-stonecore";
+CFG
+
+# --- index.html (Studio hub minimal + health check) ---
+cat <<'HTML' > frontend/index.html
+>>>>>>> 590ec85 (v1 cemented)
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>CrateJuice™ Studio</title>
+  
+ HEAD
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+>>>>>>> 590ec85 (v1 cemented)
 <body class="cj-body">
   <div class="cj-frame">
     <header class="cj-header">
       <h1>CrateJuice™ Studio</h1>
+    HEAD
       <p class="cj-tagline">Life is a playable map.</p>
     </header>
 
@@ -76,15 +110,46 @@ cat > frontend/index.html <<'HTML'
       el.textContent = `Studio ${CJ_VERSION} · backend unreachable (Render asleep or URL wrong)`;
     });
   </script>
+=======
+      <p class="cj-tagline">Idea → Artifact, no friction.</p>
+    </header>
+
+    <main class="cj-main">
+      <a class="cj-btn" href="/press/">🎴 Press</a>
+      <a class="cj-btn" href="/crate/">📦 Crate Room</a>
+      <p class="cj-hint" id="studioStatus">Checking backend…</p>
+    </main>
+
+    <footer class="cj-footer">
+      CrateJuice™ 2025 · PLUR
+    </footer>
+  </div>
+
+<script type="module">
+import { API_BASE, CJ_VERSION } from "/js/config.js";
+const el = document.getElementById("studioStatus");
+el.textContent = \`Studio \${CJ_VERSION} · checking backend…\`;
+fetch(\`\${API_BASE}/health\`)
+  .then(r => r.json())
+  .then(() => el.textContent = \`Studio \${CJ_VERSION} · backend OK\`)
+  .catch(() => el.textContent = \`Studio \${CJ_VERSION} · backend asleep / offline-first active\`);
+</script>
+>>>>>>> 590ec85 (v1 cemented)
 </body>
 </html>
 HTML
 
+HEAD
 cat > frontend/press/index.html <<'HTML'
+=======
+# --- crate/index.html ---
+cat <<'HTML' > frontend/crate/index.html
+>>>>>>> 590ec85 (v1 cemented)
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+   HEAD
   <title>CrateJuice™ Press</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/css/style.css" />
@@ -131,10 +196,42 @@ cat > frontend/press/index.html <<'HTML'
   </div>
 
   <script type="module" src="/js/postcard.js"></script>
+=======
+  <title>CrateJuice™ Crate Room</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="cj-body">
+<div class="cj-frame">
+<header class="cj-header">
+  <h1>Crate Room</h1>
+  <p class="cj-tagline">Offline-first · Taste over algorithm</p>
+</header>
+
+<main class="cj-main">
+  <textarea id="rawTracks" rows="18" placeholder="Artist - Title (one per line)"></textarea>
+
+  <input id="likeSeed" placeholder="Like… seed (optional)" />
+  <input id="similarityStrict" type="range" min="0" max="100" value="60" />
+
+  <button id="makeCrateBtn" class="cj-btn">Generate Crate</button>
+  <button id="downloadCrateBtn" class="cj-btn cj-btn-secondary">Download Crate JSON</button>
+
+  <div id="voiceStatus" class="cj-hint"></div>
+  <div id="crateStatus" class="cj-hint"></div>
+
+  <pre id="crateOut" class="cj-hint"></pre>
+</main>
+
+<footer class="cj-footer">CrateJuice™ 2025 · PLUR</footer>
+</div>
+
+<script type="module" src="/js/crate.js"></script>
+>>>>>>> 590ec85 (v1 cemented)
 </body>
 </html>
 HTML
 
+HEAD
 cat > frontend/crate/index.html <<'HTML'
 <!DOCTYPE html>
 <html lang="en">
@@ -679,3 +776,59 @@ echo "Next:"
 echo "  git status"
 echo "  git add -A && git commit -m \"Stone Core v1 (routes+press+crate offline+voice prompt)\""
 echo "  git push"
+=======
+# --- crate.js ---
+cat <<'JS' > frontend/js/crate.js
+import { CJ_VERSION } from "/js/config.js";
+
+const rawTracks = document.getElementById("rawTracks");
+const out = document.getElementById("crateOut");
+const status = document.getElementById("crateStatus");
+const voiceStatus = document.getElementById("voiceStatus");
+
+function parseLines(raw) {
+  const ok = [], skipped = [];
+  (raw || "").split(/\\r?\\n/).forEach(l => {
+    const s = l.trim();
+    if (!s) return;
+    let a="", t=s;
+    [" - "," — "," – ",": "].some(sep=>{
+      if (s.includes(sep)) {
+        [a,t]=s.split(sep,2); return true;
+      }
+    });
+    if (!t) skipped.push(s);
+    else ok.push({artist:a.trim(), title:t.trim(), raw:s});
+  });
+  return { ok, skipped };
+}
+
+document.getElementById("makeCrateBtn").onclick = () => {
+  const { ok, skipped } = parseLines(rawTracks.value);
+  const crate = {
+    version: CJ_VERSION,
+    created_at: new Date().toISOString(),
+    track_count: ok.length,
+    tracks: ok
+  };
+  out.textContent = JSON.stringify(crate, null, 2);
+  status.textContent = \`Parsed \${ok.length} tracks\${skipped.length ? " · skipped "+skipped.length : ""}\`;
+};
+
+document.getElementById("downloadCrateBtn").onclick = () => {
+  const blob = new Blob([out.textContent], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "crate_v1.json";
+  a.click();
+};
+
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+voiceStatus.textContent = SR
+  ? "🎙 Voice supported — or use keyboard mic"
+  : "🎙 Voice not supported → use keyboard mic to squeeze the Juice";
+JS
+
+chmod +x apply_stonecore_v1.sh
+echo "✅ Stone Core v1 applied. Commit when ready."
+ 590ec85 (v1 cemented)
