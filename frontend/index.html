@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>CrateJuice™ Studio</title>
+<<<<<<< HEAD
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Core styles -->
@@ -52,5 +53,36 @@
     </footer>
 
   </div>
+=======
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="cj-body">
+  <div class="cj-frame">
+    <header class="cj-header">
+      <h1>CrateJuice™ Studio</h1>
+      <p class="cj-tagline">Idea → Artifact, no friction.</p>
+    </header>
+
+    <main class="cj-main">
+      <a class="cj-btn" href="/press/">🎴 Press</a>
+      <a class="cj-btn" href="/crate/">📦 Crate Room</a>
+      <p class="cj-hint" id="studioStatus">Checking backend…</p>
+    </main>
+
+    <footer class="cj-footer">
+      CrateJuice™ 2025 · PLUR
+    </footer>
+  </div>
+
+<script type="module">
+import { API_BASE, CJ_VERSION } from "/js/config.js";
+const el = document.getElementById("studioStatus");
+el.textContent = \`Studio \${CJ_VERSION} · checking backend…\`;
+fetch(\`\${API_BASE}/health\`)
+  .then(r => r.json())
+  .then(() => el.textContent = \`Studio \${CJ_VERSION} · backend OK\`)
+  .catch(() => el.textContent = \`Studio \${CJ_VERSION} · backend asleep / offline-first active\`);
+</script>
+>>>>>>> 20abfb1 (Day 14 — Stone Core v1 locked)
 </body>
 </html>

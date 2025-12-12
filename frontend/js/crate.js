@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { API_BASE_URL } from "./config.js";
 
 const nameInput = document.getElementById("crateName");
@@ -74,3 +75,53 @@ function downloadCrate() {
 
 genBtn.addEventListener("click", generateCrate);
 dlBtn.addEventListener("click", downloadCrate);
+=======
+import { CJ_VERSION } from "/js/config.js";
+
+const rawTracks = document.getElementById("rawTracks");
+const out = document.getElementById("crateOut");
+const status = document.getElementById("crateStatus");
+const voiceStatus = document.getElementById("voiceStatus");
+
+function parseLines(raw) {
+  const ok = [], skipped = [];
+  (raw || "").split(/\\r?\\n/).forEach(l => {
+    const s = l.trim();
+    if (!s) return;
+    let a="", t=s;
+    [" - "," — "," – ",": "].some(sep=>{
+      if (s.includes(sep)) {
+        [a,t]=s.split(sep,2); return true;
+      }
+    });
+    if (!t) skipped.push(s);
+    else ok.push({artist:a.trim(), title:t.trim(), raw:s});
+  });
+  return { ok, skipped };
+}
+
+document.getElementById("makeCrateBtn").onclick = () => {
+  const { ok, skipped } = parseLines(rawTracks.value);
+  const crate = {
+    version: CJ_VERSION,
+    created_at: new Date().toISOString(),
+    track_count: ok.length,
+    tracks: ok
+  };
+  out.textContent = JSON.stringify(crate, null, 2);
+  status.textContent = \`Parsed \${ok.length} tracks\${skipped.length ? " · skipped "+skipped.length : ""}\`;
+};
+
+document.getElementById("downloadCrateBtn").onclick = () => {
+  const blob = new Blob([out.textContent], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "crate_v1.json";
+  a.click();
+};
+
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+voiceStatus.textContent = SR
+  ? "🎙 Voice supported — or use keyboard mic"
+  : "🎙 Voice not supported → use keyboard mic to squeeze the Juice";
+>>>>>>> 20abfb1 (Day 14 — Stone Core v1 locked)

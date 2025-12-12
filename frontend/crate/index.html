@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+<<<<<<< HEAD
   <title>CrateJuice™ Crate Stacker</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
@@ -100,5 +101,36 @@ Paste a tracklist and hit "Generate Crate" to see it structured here.</pre>
   </div>
 
   <script type="module" src="../js/crate.js"></script>
+=======
+  <title>CrateJuice™ Crate Room</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="cj-body">
+<div class="cj-frame">
+<header class="cj-header">
+  <h1>Crate Room</h1>
+  <p class="cj-tagline">Offline-first · Taste over algorithm</p>
+</header>
+
+<main class="cj-main">
+  <textarea id="rawTracks" rows="18" placeholder="Artist - Title (one per line)"></textarea>
+
+  <input id="likeSeed" placeholder="Like… seed (optional)" />
+  <input id="similarityStrict" type="range" min="0" max="100" value="60" />
+
+  <button id="makeCrateBtn" class="cj-btn">Generate Crate</button>
+  <button id="downloadCrateBtn" class="cj-btn cj-btn-secondary">Download Crate JSON</button>
+
+  <div id="voiceStatus" class="cj-hint"></div>
+  <div id="crateStatus" class="cj-hint"></div>
+
+  <pre id="crateOut" class="cj-hint"></pre>
+</main>
+
+<footer class="cj-footer">CrateJuice™ 2025 · PLUR</footer>
+</div>
+
+<script type="module" src="/js/crate.js"></script>
+>>>>>>> 20abfb1 (Day 14 — Stone Core v1 locked)
 </body>
 </html>

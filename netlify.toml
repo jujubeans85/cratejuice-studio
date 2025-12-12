@@ -1,3 +1,6 @@
 [build]
   publish = "frontend"
+<<<<<<< HEAD
   command = ""
+=======
+>>>>>>> 20abfb1 (Day 14 — Stone Core v1 locked)
