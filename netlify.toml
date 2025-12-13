@@ -1,5 +1,19 @@
 [build]
   publish = "frontend"
 
-  command = ""
-  
+# Let real folders win first
+[[redirects]]
+  from = "/press/*"
+  to = "/press/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/docs/*"
+  to = "/docs/:splat"
+  status = 200
+
+# Then the SPA fallback for everything else
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
