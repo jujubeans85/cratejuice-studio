@@ -1,142 +1,311 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crate Stacker</title>
   <style>
-    :root{color-scheme:dark}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background:#0b0c10;color:#e8e8e8}
-    .wrap{max-width:980px;margin:0 auto;padding:22px}
-    .card{background:#12141a;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px}
-    h1{margin:0 0 6px;font-size:28px}
-    .sub{opacity:.75;margin:0 0 18px}
-    label{display:block;font-size:13px;opacity:.8;margin:14px 0 8px}
-    input,textarea,button{width:100%;box-sizing:border-box;border-radius:12px;border:1px solid rgba(255,255,255,.14);
-      background:#0f1117;color:#e8e8e8;padding:12px 12px;font-size:14px}
-    textarea{min-height:180px;resize:vertical}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media (max-width:800px){.row{grid-template-columns:1fr}}
-    .btn{cursor:pointer;border:none;background:#f4b83f;color:#0b0c10;font-weight:800}
-    .btn:active{transform:translateY(1px)}
-    .mini{font-size:12px;opacity:.7;margin-top:8px}
-    .out{margin-top:14px;padding:14px;border-radius:12px;background:#0f1117;border:1px solid rgba(255,255,255,.1)}
-    pre{white-space:pre-wrap;word-wrap:break-word;margin:0}
-    .footer{margin-top:18px;opacity:.7;font-size:12px}
-    .pill{display:inline-block;padding:4px 10px;border:1px solid rgba(255,255,255,.14);border-radius:999px;margin-right:8px}
+    :root { color-scheme: dark; }
+    body{
+      margin:0; min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      background:#0b0b0c; color:#eee;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    .card{
+      width:min(980px, 94vw);
+      background: rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:18px;
+      padding:20px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+    }
+    h1{ margin:0 0 6px; font-weight:800; letter-spacing:.3px; }
+    .sub{ opacity:.75; margin:0 0 14px; }
+    .row{ display:grid; grid-template-columns: 1.2fr .8fr; gap:16px; }
+    @media (max-width: 860px){ .row{ grid-template-columns: 1fr; } }
+
+    label{ display:block; font-size:12px; opacity:.75; margin:10px 0 6px; }
+    input, textarea{
+      width:100%; box-sizing:border-box;
+      background: rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.12);
+      color:#eee;
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
+    }
+    textarea{ min-height: 260px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    .btns{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    button{
+      border:0; cursor:pointer;
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:700;
+      background:#f0c36a; color:#1a1208;
+    }
+    button.secondary{ background: rgba(255,255,255,0.12); color:#eee; }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .drop{
+      border:1px dashed rgba(255,255,255,0.25);
+      border-radius:14px;
+      padding:14px;
+      background: rgba(0,0,0,0.22);
+    }
+    .muted{ opacity:.7; font-size:12px; }
+    .status{ font-size:12px; margin-top:8px; opacity:.8; white-space:pre-wrap; }
+    .preview{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      background: rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.10);
+      min-height: 92px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+    footer{ margin-top:14px; text-align:center; opacity:.55; font-size:12px; }
+    a{ color:#f0c36a; text-decoration:none; }
   </style>
+
+  <!-- Tesseract.js (browser OCR) -->
+  <script src="https://unpkg.com/tesseract.js@5.1.0/dist/tesseract.min.js"></script>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Crate Stacker</h1>
-      <p class="sub">Turn raw tracklists into clean CJ crates. No fluff. Paste → Parse → Export.</p>
+  <div class="card">
+    <h1>Crate Stacker</h1>
+    <p class="sub">Drop a tracklist photo → OCR → paste-ready lines. (Offline-ish: runs in your browser.)</p>
 
-      <div class="row">
-        <div>
-          <label>Crate name</label>
-          <input id="crateName" value="CJ Demo Crate — Day 0" />
-        </div>
-        <div>
-          <label>Notes (optional)</label>
-          <input id="notes" placeholder="e.g. Headache run, Sunday arvo test" />
+    <div class="row">
+      <div>
+        <label>Crate name</label>
+        <input id="crateName" value="Stacker Demo — Vol 1" />
+
+        <label>Playlist URL (optional)</label>
+        <input id="playlistUrl" value="" placeholder="https://open.spotify.com/playlist/..." />
+
+        <label>Tracklist (one per line: Artist - Title)</label>
+        <textarea id="tracklist" placeholder="Paste here..."></textarea>
+
+        <div class="btns">
+          <button id="btnFill10">Fill Demo 10</button>
+          <button class="secondary" id="btnDownload">Download JSON</button>
+          <button class="secondary" id="btnClear">Clear</button>
         </div>
       </div>
 
-      <label>Drop a tracklist photo (optional)</label>
-      <input id="photo" type="file" accept="image/*" />
-      <div class="mini">Auto-OCR in-browser is possible later. For now: photo is stored locally only + you still paste text below (fast + reliable).</div>
+      <div>
+        <div class="drop" id="dropZone">
+          <strong>OCR dropzone</strong>
+          <div class="muted">Drag a screenshot here or use the picker. We’ll extract lines and you choose whether to add them.</div>
 
-      <label>Tracklist (one per line: Artist - Title)</label>
-      <textarea id="tracklist" placeholder="Paste here..."></textarea>
+          <label style="margin-top:10px;">Pick image</label>
+          <input type="file" id="imgPick" accept="image/*" />
 
-      <div class="row">
-        <button class="btn" id="btnSeed">Seed with your 10 tracks</button>
-        <button class="btn" id="btnMake">Generate Crate JSON</button>
-      </div>
+          <div class="btns">
+            <button class="secondary" id="btnOcr" disabled>Run OCR</button>
+            <button id="btnAdd" disabled>Add OCR → Tracklist</button>
+            <button class="secondary" id="btnNoPreview">NO PREVIEW MODE</button>
+          </div>
 
-      <div class="out" id="out" style="display:none">
-        <div style="margin-bottom:10px">
-          <span class="pill" id="countPill"></span>
-          <button class="btn" id="btnDownload" style="margin-top:10px">Download crate.json</button>
+          <div class="status" id="status">Status: idle</div>
+          <div class="preview" id="preview">OCR preview will appear here…</div>
         </div>
-        <pre id="json"></pre>
-      </div>
 
-      <div class="footer">CrateJuice™ 2025 · PLUR</div>
+        <div style="margin-top:12px" class="muted">
+          Tip: OCR is messy. This tool cleans common junk, but you’re still the DJ — don’t let a robot add “HEADACHE 23 listens” to your legacy.
+        </div>
+      </div>
     </div>
+
+    <footer>CrateJuice™ 2025 · PLUR</footer>
   </div>
 
 <script>
+  const demo10 = [
+    "Headache - Truisms 4 Dummies",
+    "Headache - Mission Impossible III",
+    "Headache - Bucket Listener",
+    "Aaron Frazer - If I Got It (Your Love Brought It)",
+    "Headache - That Thing with the Rabbit",
+    "Headache - The Party that Never Ends",
+    "Headache - The Pavement is my Pillow Talk",
+    "Parcels - Tieduprightnow",
+    "Us3, Rahsaan, Gerard Presencer - Cantaloop (Flip Fantasia)",
+    "Poldoore - But I Do"
+  ];
+
   const $ = (id) => document.getElementById(id);
 
-  const seed = `Headache - Truism 4 Dummies
-Headache - Mission Impossible III
-Headache - Bucket Listener
-Aaron Frazer - If I Got It (Your Love Brought It)
-Headache - That Thing with the Rabbit
-Headache - The Party that Never Ends
-Headache - The Pavement is my Pillow Talk
-Parcels - Tieduprightnow
-Us3, Rahsaan, Gerard Presencer - Cantaloup (Flip Fantasia)
-Poldoore - But I Do`;
+  let currentImageFile = null;
+  let ocrLines = [];
+  let noPreviewMode = false;
 
-  function parseLines(text){
-    return text.split(/\r?\n/)
-      .map(l => l.trim())
-      .filter(Boolean)
-      .map((line, idx) => {
-        // Accept either "Artist - Title" or "Title - Artist" (we'll assume Artist - Title is intended)
-        const parts = line.split(" - ");
-        if(parts.length >= 2){
-          const artist = parts[0].trim();
-          const title = parts.slice(1).join(" - ").trim();
-          return { n: idx+1, artist, title, raw: line };
+  function setStatus(msg){ $("status").textContent = "Status: " + msg; }
+
+  function cleanOcrText(raw){
+    // Normalize lines, strip Spotify UI junk & listen counts
+    const lines = raw
+      .replace(/\r/g, "")
+      .split("\n")
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const cleaned = [];
+    for (const line of lines){
+      // kill obvious junk
+      if (/^\d+\s*listens?$/i.test(line)) continue;
+      if (/listens?\s*•/i.test(line)) continue;
+      if (/^video\s*•/i.test(line)) continue;
+      if (/^\s*headache\s*$/i.test(line)) continue;
+      if (/^E\s+\d+/i.test(line)) continue;
+
+      // common pattern: "Title 24 listens • Artist"
+      // Try to convert to "Artist - Title" if we can detect bullet separator
+      const bulletSplit = line.split("•").map(x=>x.trim());
+      if (bulletSplit.length >= 2){
+        // left side contains title + listens, right side contains artist
+        const right = bulletSplit[bulletSplit.length - 1];
+        const left = bulletSplit[0].replace(/\b\d+\s*listens?\b/i, "").trim();
+
+        // Only accept if both look non-empty
+        if (right && left && right.length <= 80 && left.length <= 120){
+          cleaned.push(`${right} - ${left}`);
+          continue;
         }
-        return { n: idx+1, artist: "", title: "", raw: line, needs_fix: true };
-      });
+      }
+
+      // if already looks like "Artist - Title", keep it
+      if (line.includes(" - ")) { cleaned.push(line); continue; }
+
+      // Otherwise keep the line (you can fix manually)
+      cleaned.push(line);
+    }
+
+    // de-dupe while preserving order
+    const seen = new Set();
+    return cleaned.filter(l => (seen.has(l) ? false : (seen.add(l), true)));
   }
 
-  function makeCrate(){
-    const crateName = $("crateName").value.trim() || "Untitled Crate";
-    const notes = $("notes").value.trim();
-    const tracks = parseLines($("tracklist").value);
+  async function runOCR(file){
+    setStatus("OCR running… (this can take a bit)");
+    $("btnOcr").disabled = true;
+    $("btnAdd").disabled = true;
 
-    const crate = {
-      crate_name: crateName,
-      notes,
-      created_at: new Date().toISOString(),
-      source: "crate-stacker",
-      tracks
-    };
+    const { data } = await Tesseract.recognize(file, "eng", {
+      logger: m => {
+        if (m.status === "recognizing text"){
+          setStatus(`OCR ${Math.round((m.progress || 0)*100)}%`);
+        }
+      }
+    });
 
-    const json = JSON.stringify(crate, null, 2);
-    $("json").textContent = json;
-    $("countPill").textContent = `${tracks.length} tracks`;
-    $("out").style.display = "block";
+    const raw = data.text || "";
+    ocrLines = cleanOcrText(raw);
 
-    // download handler
-    $("btnDownload").onclick = () => {
-      const blob = new Blob([json], {type:"application/json"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "crate.json";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    };
+    $("preview").textContent = ocrLines.length
+      ? ocrLines.join("\n")
+      : "(No text detected — try a clearer screenshot.)";
+
+    $("btnAdd").disabled = (ocrLines.length === 0);
+    $("btnOcr").disabled = false;
+    setStatus(`OCR done. Lines: ${ocrLines.length}`);
   }
 
-  $("btnSeed").addEventListener("click", () => { $("tracklist").value = seed; });
-  $("btnMake").addEventListener("click", makeCrate);
+  function addOcrToTracklist(){
+    const existing = $("tracklist").value.trim();
+    const add = ocrLines.join("\n").trim();
+    if (!add) return;
 
-  // Photo “auto rule” placeholder (we can wire OCR later)
-  $("photo").addEventListener("change", () => {
-    // We intentionally do nothing with the image yet — keeps it private/local.
-    // Next step: add Tesseract.js OCR + preview-before-add (or instant-add mode).
+    const next = existing ? (existing + "\n" + add) : add;
+    $("tracklist").value = next + "\n";
+    setStatus(`Added ${ocrLines.length} OCR lines to tracklist.`);
+  }
+
+  function downloadJSON(){
+    const payload = {
+      crate_name: $("crateName").value.trim() || "Untitled Crate",
+      playlist_url: $("playlistUrl").value.trim() || null,
+      raw_tracks: $("tracklist").value.trim()
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = (payload.crate_name.replace(/[^a-z0-9]+/gi,"_").toLowerCase() || "crate") + ".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // UI wiring
+  $("btnFill10").addEventListener("click", () => {
+    $("tracklist").value = demo10.join("\n") + "\n";
+    $("playlistUrl").value = "https://open.spotify.com/playlist/37i9dQZF1E4B86zDYmtZAm";
+    setStatus("Demo 10 loaded.");
+  });
+
+  $("btnDownload").addEventListener("click", downloadJSON);
+
+  $("btnClear").addEventListener("click", () => {
+    $("tracklist").value = "";
+    $("playlistUrl").value = "";
+    $("crateName").value = "Stacker Demo — Vol 1";
+    $("preview").textContent = "OCR preview will appear here…";
+    ocrLines = [];
+    setStatus("Cleared.");
+  });
+
+  $("imgPick").addEventListener("change", async (e) => {
+    currentImageFile = e.target.files?.[0] || null;
+    $("btnOcr").disabled = !currentImageFile;
+    if (currentImageFile){
+      setStatus(`Image loaded: ${currentImageFile.name}`);
+      if (noPreviewMode){
+        await runOCR(currentImageFile);
+        addOcrToTracklist();
+      }
+    } else {
+      setStatus("idle");
+    }
+  });
+
+  $("btnOcr").addEventListener("click", async () => {
+    if (!currentImageFile) return;
+    await runOCR(currentImageFile);
+  });
+
+  $("btnAdd").addEventListener("click", addOcrToTracklist);
+
+  $("btnNoPreview").addEventListener("click", async () => {
+    noPreviewMode = !noPreviewMode;
+    $("btnNoPreview").textContent = noPreviewMode ? "NO PREVIEW MODE: ON" : "NO PREVIEW MODE";
+    setStatus(noPreviewMode ? "No Preview Mode ON (auto-add after OCR)" : "No Preview Mode OFF");
+    if (noPreviewMode && currentImageFile){
+      await runOCR(currentImageFile);
+      addOcrToTracklist();
+    }
+  });
+
+  // Drag & drop
+  const dz = $("dropZone");
+  dz.addEventListener("dragover", (e)=>{ e.preventDefault(); dz.style.borderColor="rgba(240,195,106,.8)"; });
+  dz.addEventListener("dragleave", ()=>{ dz.style.borderColor="rgba(255,255,255,0.25)"; });
+  dz.addEventListener("drop", async (e)=>{
+    e.preventDefault();
+    dz.style.borderColor="rgba(255,255,255,0.25)";
+    const f = e.dataTransfer.files?.[0];
+    if (!f) return;
+    currentImageFile = f;
+    $("btnOcr").disabled = false;
+    setStatus(`Image dropped: ${f.name}`);
+    if (noPreviewMode){
+      await runOCR(currentImageFile);
+      addOcrToTracklist();
+    }
   });
 </script>
 </body>
