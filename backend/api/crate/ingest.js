@@ -3,29 +3,76 @@
   "vibe": "Golden era hip-hop / head nod / soul-dusted boom bap",
   "playlist_source": "Screenshot import (Spotify)",
   "tracks": [
-    { "artist": "Ugly Duckling", "title": "A Little Samba" },
-    { "artist": "Jurassic 5", "title": "Concrete Schoolyard" },
-    { "artist": "Gang Starr", "title": "Full Clip" },
-    { "artist": "Mos Def", "title": "Mathematics" },
-    { "artist": "Pharoahe Monch", "title": "Simon Says" },
-    { "artist": "Dilated Peoples", "title": "Worst Comes To Worst" },
-    { "artist": "Jaylib", "title": "The Red", "extra": "Madlib, J Dilla" },
-    { "artist": "dj honda", "title": "Travellin' Man (Remastered)", "extra": "Mos Def" },
-    { "artist": "Gang Starr", "title": "Work" },
-    { "artist": "Hi-Tek", "title": "The Sun God" },
-    { "artist": "Bahamadia", "title": "unknowhowwedu" },
-    { "artist": "Mos Def", "title": "Hip Hop" },
-    { "artist": "DJ Jazzy Jeff", "title": "For Da Love of Da Game", "extra": "Pauly Yamz, Baby Blak" },
-    { "artist": "Gang Starr", "title": "Above The Clouds", "extra": "Inspectah Deck" },
-    { "artist": "J Dilla", "title": "So Far to Go", "extra": "Common, D'Angelo" },
-    { "artist": "MF DOOM", "title": "Doomsday", "extra": "Pebbles The Invisible Girl" },
-    { "artist": "Talib Kweli", "title": "Fortified Live", "extra": "Yasiin Bey, Mr Man" },
-    { "artist": "Dr. Octagon", "title": "Blue Flowers" },
-    { "artist": "De La Soul", "title": "Rock Co.Kane Flow", "extra": "MF DOOM" },
-    { "artist": "Mos Def", "title": "Body Rock", "extra": "Q-Tip, Tash" },
-    { "artist": "MF DOOM", "title": "Rapp Snitch Knishes", "extra": "Mr Fantastik" },
-    { "artist": "Blackalicious", "title": "Deception" },
-    { "artist": "Dilated Peoples", "title": "This Way" }
+   crate.json
+{
+  "crate_name": "CJ Demo Crate — Day 0",
+  "notes": "",
+  "created_at": "2025-12-14T04:08:16.467Z",
+  "source": "crate-stacker",
+  "tracks": [
+    {
+      "n": 1,
+      "artist": "Headache",
+      "title": "Truism 4 Dummies",
+      "raw": "Headache - Truism 4 Dummies"
+    },
+    {
+      "n": 2,
+      "artist": "Headache",
+      "title": "Mission Impossible III",
+      "raw": "Headache - Mission Impossible III"
+    },
+    {
+      "n": 3,
+      "artist": "Headache",
+      "title": "Bucket Listener",
+      "raw": "Headache - Bucket Listener"
+    },
+    {
+      "n": 4,
+      "artist": "Aaron Frazer",
+      "title": "If I Got It (Your Love Brought It)",
+      "raw": "Aaron Frazer - If I Got It (Your Love Brought It)"
+    },
+    {
+      "n": 5,
+      "artist": "Headache",
+      "title": "That Thing with the Rabbit",
+      "raw": "Headache - That Thing with the Rabbit"
+    },
+    {
+      "n": 6,
+      "artist": "Headache",
+      "title": "The Party that Never Ends",
+      "raw": "Headache - The Party that Never Ends"
+    },
+    {
+      "n": 7,
+      "artist": "Headache",
+      "title": "The Pavement is my Pillow Talk",
+      "raw": "Headache - The Pavement is my Pillow Talk"
+    },
+    {
+      "n": 8,
+      "artist": "Parcels",
+      "title": "Tieduprightnow",
+      "raw": "Parcels - Tieduprightnow"
+    },
+    {
+      "n": 9,
+      "artist": "Us3, Rahsaan, Gerard Presencer",
+      "title": "Cantaloup (Flip Fantasia)",
+      "raw": "Us3, Rahsaan, Gerard Presencer - Cantaloup (Flip Fantasia)"
+    },
+    {
+      "n": 10,
+      "artist": "Poldoore",
+      "title": "But I Do",
+      "raw": "Poldoore - But I Do"
+    }
+  ]
+}
+
   ],
   "track_count": 23,
   "created_at": "2025-12-12",
